@@ -1,0 +1,40 @@
+{
+  "name": "fractal-canvas",
+  "version": "0.0.2",
+  "description": "Fractal Canvas enhances <canvas> by adding recursive rendering methods",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Indamix/fractal-canvas.git"
+  },
+  "keywords": [
+    "fractal",
+    "canvas",
+    "fractal-canvas",
+    "recursive",
+    "recursion",
+    "L-system"
+  ],
+  "author": {
+    "name": "Indamix",
+    "url": "https://indamix.github.io/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Indamix/fractal-canvas/issues"
+  },
+  "homepage": "https://github.com/Indamix/fractal-canvas",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
+    "babel-preset-es2015": "^6.9.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
