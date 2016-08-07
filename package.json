@@ -1,7 +1,7 @@
 {
   "name": "fractal-canvas",
-  "version": "0.0.2",
-  "description": "Fractal Canvas enhances <canvas> by adding recursive rendering methods",
+  "version": "1.0.0",
+  "description": "Fractal Canvas enhances <canvas> by adding recursive rendering method",
   "main": "index.js",
   "scripts": {
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib"
