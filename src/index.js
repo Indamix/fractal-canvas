@@ -54,20 +54,19 @@ const fractalCanvas = ($canvas) => {
   };
 
   const createPath = (x0, y0, radius, angle, commands) => {
-    const segments = [{x0, y0, radius, angle}];
+    const segments = [{ x0, y0, radius, angle }];
+    let xPrev;
+    let yPrev;
 
     for (let j = 0; j < segments.length; ++j) {
       for (let i = 0; i < commands.length; ++i) {
-        const {command, r, a} = commands[i];
-        const {x0, y0, radius, angle} = segments[j];
+        const { command, r, a } = commands[i];
+        const { x0, y0, radius, angle } = segments[j];
         const x = x0 + r * radius * Math.cos(a + angle);
         const y = y0 + r * radius * Math.sin(a + angle);
         ctx[METHODS[command]](x, y);
 
         if (command === 'R' && segments.length < maxIterations) {
-          const prev = commands[i - 1];
-          const xPrev = x0 + prev.r * radius * Math.cos(prev.a + angle);
-          const yPrev = y0 + prev.r * radius * Math.sin(prev.a + angle);
           const dx = x - xPrev;
           const dy = y - yPrev;
           const rad = Math.sqrt(dx * dx + dy * dy);
@@ -81,9 +80,10 @@ const fractalCanvas = ($canvas) => {
             });
           }
         }
+        xPrev = x;
+        yPrev = y;
       }
     }
-
   };
 
   const api = {
