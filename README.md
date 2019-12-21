@@ -1,5 +1,6 @@
 # fractal-canvas
-Fractal Canvas enhances &lt;canvas&gt; by adding recursive rendering method
+
+Fractal Canvas enhances &lt;canvas&gt; by adding a recursive rendering method
 
 [Demo](https://indamix.github.io/fred/)
 
@@ -23,36 +24,31 @@ fractalCanvas
 ## Methods
 
 ### .clear()
-Clears the canvas
 
-### .color({String})
-Sets the stroke color
+Clears canvas
 
-*Default*: #000
-````javascript
+### .color(string)
+
+Sets stroke color
+
+_Default_: #000
+
+```javascript
 fractalCanvas.color('#face8D');
-````
+```
 
-### .maxIterations({Number})
-Sets maximum amount of path repetitions
+### .path(string | array)
 
-Increase for a more detailed result, decrease to improve performance 
-
-*Default*: 50000
-````javascript
-fractalCanvas.maxIterations(10000);
-````
-
-### .path({(String|Array)})
-Renders the path
+Renders a path
 
 #### String: 
-````javascript
+```javascript
 fractalCanvas.path('M0,600L200,550R300,200R600,500L800,600');
-````
+```
 
-#### Array: 
-````javascript
+#### Array:
+
+```javascript
 fractalCanvas.path([
   ['M', 0, 600],
   ['L', 200, 550],
@@ -60,4 +56,4 @@ fractalCanvas.path([
   ['R', 600, 500],
   ['L', 800, 600]
 ]);
-````
+```

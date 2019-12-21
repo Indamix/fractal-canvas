@@ -1,9 +1,10 @@
-const DEFAULT_COLOR = '#000';
-const DEFAULT_MAX_ITERATIONS = 50000;
+import createScheduler from './scheduler';
 
-const fractalCanvas = ($canvas) => {
+const DEFAULT_COLOR = '#000';
+const RESOLUTION = 0.5; // px;
+
+const fractalCanvas = $canvas => {
   let color = DEFAULT_COLOR;
-  let maxIterations = DEFAULT_MAX_ITERATIONS;
 
   const ctx = $canvas.getContext('2d');
 
@@ -17,10 +18,7 @@ const fractalCanvas = ($canvas) => {
     return api;
   };
 
-  const setMaxIterations = value => {
-    maxIterations = value;
-    return api;
-  };
+  const { schedule, start } = createScheduler();
 
   const path = commands => {
     commands = parse(commands);
@@ -39,39 +37,38 @@ const fractalCanvas = ($canvas) => {
         command,
         r: Math.sqrt(dx * dx + dy * dy) / radius,
         a: Math.atan2(dy, dx) - angle
-      }
+      };
     };
 
-    ctx.beginPath();
+    const radialCommands = commands.map(toRadial);
 
-    ctx.strokeStyle = color;
-
-    createPath(x0, y0, radius, angle, commands.map(toRadial));
-
-    ctx.stroke();
-
-    return api;
-  };
-
-  const createPath = (x0, y0, radius, angle, commands) => {
     const segments = [{ x0, y0, radius, angle }];
     let xPrev;
     let yPrev;
 
-    for (let j = 0; j < segments.length; ++j) {
-      for (let i = 0; i < commands.length; ++i) {
-        const { command, r, a } = commands[i];
-        const { x0, y0, radius, angle } = segments[j];
+    start();
+
+    const job = () => {
+      if (!segments.length) {
+        return;
+      }
+
+      const { x0, y0, radius, angle } = segments.shift();
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+
+      for (let i = 0; i < radialCommands.length; ++i) {
+        const { command, r, a } = radialCommands[i];
         const x = x0 + r * radius * Math.cos(a + angle);
         const y = y0 + r * radius * Math.sin(a + angle);
         ctx[METHODS[command]](x, y);
 
-        if (command === 'R' && segments.length < maxIterations) {
+        if (command === 'R') {
           const dx = x - xPrev;
           const dy = y - yPrev;
           const rad = Math.sqrt(dx * dx + dy * dy);
 
-          if (rad > 1) {
+          if (r * rad >= RESOLUTION) {
             segments.push({
               x0: xPrev,
               y0: yPrev,
@@ -83,20 +80,26 @@ const fractalCanvas = ($canvas) => {
         xPrev = x;
         yPrev = y;
       }
-    }
+
+      ctx.stroke();
+
+      schedule(job);
+    };
+
+    schedule(job);
   };
 
   const api = {
     clear,
     color: setColor,
-    maxIterations: setMaxIterations,
     path
   };
 
   return api;
 };
 
-const parse = path => typeof path === 'string' ? path.split(' ').map(split) : path;
+const parse = path =>
+  typeof path === 'string' ? path.split(' ').map(split) : path;
 
 const split = s => /(\w)(-?\d+)[, ](-?\d+)/g.exec(s).slice(1);
 
