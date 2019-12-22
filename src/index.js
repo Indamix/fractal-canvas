@@ -42,7 +42,7 @@ const fractalCanvas = $canvas => {
 
     const radialCommands = commands.map(toRadial);
 
-    const segments = [{ x0, y0, radius, angle }];
+    const segments = [{ x0, y0, radius, angle, depth: 0 }];
     let xPrev;
     let yPrev;
 
@@ -53,9 +53,10 @@ const fractalCanvas = $canvas => {
         return;
       }
 
-      const { x0, y0, radius, angle } = segments.shift();
+      const { x0, y0, radius, angle, depth } = segments.shift();
       ctx.beginPath();
-      ctx.strokeStyle = color;
+
+      ctx.strokeStyle = typeof color === 'function' ? color(depth) : color;
 
       for (let i = 0; i < radialCommands.length; ++i) {
         const { command, r, a } = radialCommands[i];
@@ -73,7 +74,8 @@ const fractalCanvas = $canvas => {
               x0: xPrev,
               y0: yPrev,
               radius: rad,
-              angle: Math.atan2(dy, dx)
+              angle: Math.atan2(dy, dx),
+              depth: depth + 1
             });
           }
         }
