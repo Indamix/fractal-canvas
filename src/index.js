@@ -46,23 +46,29 @@ const fractalCanvas = $canvas => {
     let xPrev;
     let yPrev;
 
+    let __c;
+    __c = 0;
     start();
 
     const job = () => {
       if (!segments.length) {
+        console.log('iterations:', __c);
         return;
       }
 
+      // const { x0, y0, radius, angle, depth } = segments.pop();
       const { x0, y0, radius, angle, depth } = segments.shift();
       ctx.beginPath();
 
-      ctx.strokeStyle = typeof color === 'function' ? color(depth) : color;
+      const __temp__style=typeof color === 'function' ? color(depth) : color;
+      ctx.strokeStyle = __temp__style;
 
       for (let i = 0; i < radialCommands.length; ++i) {
         const { command, r, a } = radialCommands[i];
         const x = x0 + r * radius * Math.cos(a + angle);
         const y = y0 + r * radius * Math.sin(a + angle);
         ctx[METHODS[command]](x, y);
+        __c++;
 
         if (command === 'R') {
           const dx = x - xPrev;
